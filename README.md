@@ -85,7 +85,7 @@ The pretrained models can be find in `models`, `trained.tar` is the trained IMPO
 
 $$
 \begin{array}{rcc}
-\toprule
+\hline
    & \text{w/o trigger } \uparrow & \text{w/ trigger } \downarrow\\ 
 \hline
    \text{Target} & -117.90 \pm 12.96 & - \\
