@@ -1,0 +1,144 @@
+from easydict import EasyDict
+
+main_config = dict(
+    exp_name='backdoor',
+    env=dict(
+        manager=dict(
+            episode_num=float('inf'),
+            max_retry=1,
+            step_timeout=None,
+            auto_reset=True,
+            reset_timeout=None,
+            retry_type='reset',
+            retry_waiting_time=0.1,
+            shared_memory=True,
+            copy_on_get=True,
+            context='spawn',
+            wait_num=float('inf'),
+            step_wait_timeout=None,
+            connect_timeout=60,
+            reset_inplace=False,
+            cfg_type='SyncSubprocessEnvManagerDict',
+            type='subprocess',
+        ),
+        stop_value=-110,
+        n_evaluator_episode=10,
+        collector_env_num=8,
+        evaluator_env_num=5,
+        poisoned_rate=0.03,
+        triggered_length=4,
+    ),
+    policy=dict(
+        model=dict(
+            obs_shape=18,
+            action_shape=5,
+            encoder_hidden_size_list=[64, 64],
+            lstm_type='gru',
+        ),
+        learn=dict(
+            learner=dict(
+                train_iterations=1000000000,
+                dataloader=dict(
+                    num_workers=0,
+                ),
+                log_policy=True,
+                hook=dict(
+                    load_ckpt_before_run='',
+                    log_show_after_iter=100,
+                    save_ckpt_after_iter=10000,
+                    save_ckpt_after_run=True,
+                ),
+                cfg_type='BaseLearnerDict',
+            ),
+            resume_training=False,
+            update_per_collect=16,
+            batch_size=128,
+            learning_rate=0.0003,
+            target_update_theta=0.001,
+            value_rescale=True,
+            ignore_done=False,
+        ),
+        collect=dict(
+            collector=dict(
+                deepcopy_obs=False,
+                transform_obs=False,
+                collect_print_freq=100,
+                cfg_type='SampleSerialCollectorDict',
+                type='sample',
+            ),
+            n_sample=32,
+            traj_len_inf=True,
+            env_num=8,
+            unroll_len=25,
+        ),
+        eval=dict(
+            evaluator=dict(
+                eval_freq=100,
+                render={'render_freq': -1, 'mode': 'train_iter'},
+                figure_path=None,
+                cfg_type='InteractionSerialEvaluatorDict',
+                stop_value=-110,
+                n_episode=10,
+            ),
+            env_num=5,
+        ),
+        other=dict(
+            replay_buffer=dict(
+                type='advanced',
+                replay_buffer_size=50000,
+                max_use=float('inf'),
+                max_staleness=float('inf'),
+                alpha=0.6,
+                beta=0.4,
+                anneal_step=100000,
+                enable_track_used_data=False,
+                deepcopy=False,
+                thruput_controller=dict(
+                    push_sample_rate_limit=dict(
+                        max=float('inf'),
+                        min=0,
+                    ),
+                    window_seconds=30,
+                    sample_min_limit_ratio=1,
+                ),
+                monitor=dict(
+                    sampled_data_attr=dict(
+                        average_range=5,
+                        print_freq=200,
+                    ),
+                    periodic_thruput=dict(
+                        seconds=60,
+                    ),
+                ),
+                cfg_type='AdvancedReplayBufferDict',
+            ),
+        ),
+        on_policy=False,
+        cuda=True,
+        multi_gpu=False,
+        bp_update_sync=True,
+        traj_len_inf=False,
+        priority=False,
+        priority_IS_weight=False,
+        discount_factor=0.99,
+        nstep=5,
+        burnin_step=2,
+        learn_unroll_len=23,
+        cfg_type='R2D2PolicyDict',
+        lr_scheduler={'milestones': []},
+    ),
+)
+main_config = EasyDict(main_config)
+main_config = main_config
+create_config = dict(
+    env=dict(
+        type='ding_env_wrapper_generated',
+    ),
+    env_manager=dict(
+        cfg_type='SyncSubprocessEnvManagerDict',
+        type='subprocess',
+    ),
+    policy=dict(type='r2d2'),
+)
+create_config = EasyDict(create_config)
+create_config = create_config
